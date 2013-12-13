@@ -7,8 +7,8 @@ from sga.flask_ga import FlaskGA
 DEBUG = True
 
 GA_ID = 'UA-46303840-3'
-GA_ALLOW_PATHS = []
-GA_FORBID_PATHS = [r'^/ok']
+GA_ALLOW_PATHS = [r'^/ok']
+GA_FORBID_PATHS = []
 
 app = Flask(__name__)
 app.config.from_object(__name__)

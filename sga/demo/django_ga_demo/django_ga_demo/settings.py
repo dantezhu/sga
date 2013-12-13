@@ -88,3 +88,4 @@ STATIC_URL = '/static/'
 
 # for django_ga
 GA_ID = 'UA-46303840-3'
+GA_ALLOW_PATHS = [r'^/x']
