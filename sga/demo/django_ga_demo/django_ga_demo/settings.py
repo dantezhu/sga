@@ -126,5 +126,5 @@ LOGGING = {
 
 # for django_ga
 GA_ID = 'UA-46303840-3'
-GA_ALLOW_PATHS = [r'^/x']
 GA_FORBID_PATHS = [r'^/x']
+GA_ALLOW_PATHS = [r'^/x', r'^/y']
