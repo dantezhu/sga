@@ -18,7 +18,7 @@ from sga import constants
 
 logger = logging.getLogger('default')
 
-DEV_ENV = 'DEV_ENV' in os.environ and os.environ['DEV_ENV'] == '1'
+debug = False
 
 
 # 日志
@@ -31,7 +31,7 @@ class RequireDebugOrNot(logging.Filter):
         self._need_debug = need_debug
         
     def filter(self, record):
-        return DEV_ENV if self._need_debug else not DEV_ENV
+        return debug if self._need_debug else not debug
 
 
 FILE_MODULE_NAME = op.splitext(op.basename(__file__))[0]
@@ -104,6 +104,7 @@ def build_parser():
     parser = OptionParser(usage="Usage: %prog -t host -p port")
     parser.add_option("-t", "--host", dest="host", type='string', help="bind host", action="store")
     parser.add_option("-p", "--port", dest="port", type='int', help="bind port", action="store")
+    parser.add_option("-d", "--debug", dest="debug", help="debug mode", action="store_true")
     return parser
 
 
@@ -112,6 +113,8 @@ def configure_logging():
 
  
 def run_ga_center():
+    global debug
+
     configure_logging()
 
     parser = build_parser()
@@ -119,10 +122,11 @@ def run_ga_center():
 
     host = options.host or constants.GA_CENTER_DEFAULT_HOST
     port = options.port or constants.GA_CENTER_DEFAULT_PORT
+    debug = options.debug
+
+    logger.info("Running GACenter on %(host)s:%(port)s, debug:%(debug)s" % dict(host=host, port=port, debug=debug))
 
     prog = GACenter(host, port)
-
-    logger.info("Running GACenter on %(host)s:%(port)s" % dict(host=host, port=port))
     prog.run()
  
 if __name__ == '__main__':
