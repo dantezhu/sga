@@ -104,7 +104,7 @@ def build_parser():
     parser = OptionParser(usage="Usage: %prog -t host -p port")
     parser.add_option("-t", "--host", dest="host", type='string', help="bind host", action="store")
     parser.add_option("-p", "--port", dest="port", type='int', help="bind port", action="store")
-    parser.add_option("-d", "--debug", dest="debug", help="debug mode", action="store_true")
+    parser.add_option("-d", "--debug", dest="debug", default=False, help="debug mode", action="store_true")
     return parser
 
 
