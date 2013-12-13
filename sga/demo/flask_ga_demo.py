@@ -8,7 +8,7 @@ DEBUG = True
 
 GA_ID = 'UA-46303840-3'
 GA_FORBID_PATHS = [r'^/x']
-GA_ALLOW_PATHS = [r'^/x', r'^/y']
+GA_ALLOW_PATHS = [r'^/x', r'/y']
 
 app = Flask(__name__)
 app.config.from_object(__name__)
