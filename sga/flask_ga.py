@@ -97,7 +97,8 @@ class FlaskGA(object):
             for pattern in self._ga_allow_paths:
                 if re.match(pattern, request.path):
                     return True
-        else:
+
+            current_app.logger.debug('path is not in allow paths. path: %s', request.path)
             return False
 
         for pattern in self._ga_forbid_paths:
