@@ -6,8 +6,8 @@ django插件，绑定之后可以自动给本地的ga_center发送数据
     GA_ID : Google分析的跟踪ID
     GA_CENTER_HOST : GACenter的启动IP
     GA_CENTER_PORT : GACenter的启动端口
+    GA_FORBID_PATHS : 被拒绝的paths，优先级高于 GA_ALLOW_PATHS
     GA_ALLOW_PATHS : 被允许的paths
-    GA_FORBID_PATHS : 被拒绝的paths
 """
 
 import logging
@@ -27,8 +27,8 @@ class DjangoGA(object):
     _ga_id = None
     _ga_center_host = None
     _ga_center_port = None
-    _ga_allow_paths = None
     _ga_forbid_paths = None
+    _ga_allow_paths = None
 
     _local_ip = ''
 
@@ -38,8 +38,8 @@ class DjangoGA(object):
         self._ga_id = getattr(settings, 'GA_ID', None)
         self._ga_center_host = getattr(settings, 'GA_CENTER_HOST', None) or constants.GA_CENTER_DEFAULT_HOST
         self._ga_center_port = getattr(settings, 'GA_CENTER_PORT', None) or constants.GA_CENTER_DEFAULT_PORT
-        self._ga_allow_paths = getattr(settings, 'GA_ALLOW_PATHS', None) or []
         self._ga_forbid_paths = getattr(settings, 'GA_FORBID_PATHS', None) or []
+        self._ga_allow_paths = getattr(settings, 'GA_ALLOW_PATHS', None) or []
 
         self._local_ip = socket.gethostbyname(socket.gethostname()) or ''
 
@@ -90,17 +90,19 @@ class DjangoGA(object):
         request是否要被统计
         """
 
+        # 先判断是否在forbid列表里，只要发现就直接拒绝
+        for pattern in self._ga_forbid_paths:
+            if re.match(pattern, request.path):
+                logger.debug('path is in forbid paths. patten: %s, path: %s', pattern, request.path)
+                return False
+
+        # 只有allow列表不为空的情况下，才有效
         if self._ga_allow_paths:
             for pattern in self._ga_allow_paths:
                 if re.match(pattern, request.path):
                     return True
-
-            logger.debug('path is not in allow paths. path: %s', request.path)
-            return False
-
-        for pattern in self._ga_forbid_paths:
-            if re.match(pattern, request.path):
-                logger.debug('path is in forbid paths. patten: %s, path: %s', pattern, request.path)
+            else:
+                logger.debug('path is not in allow paths. path: %s', request.path)
                 return False
 
         return True

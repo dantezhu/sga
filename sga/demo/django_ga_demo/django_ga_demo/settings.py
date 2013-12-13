@@ -85,7 +85,46 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOG_FORMAT = (
+    '/' + '-' * 80 + '\n' +
+    '[%(levelname)s][%(asctime)s][%(process)d][%(pathname)s:%(lineno)d][%(funcName)s]:' + '\n' +
+    '%(message)s' + '\n' +
+    '-' * 80 + '/'
+)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+
+    'formatters': {
+        'standard': {
+            'format': LOG_FORMAT,
+        },
+    },
+
+    'filters': {
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+
+    },
+    'loggers': {
+        'django_ga': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+}
+
+
+
 
 # for django_ga
 GA_ID = 'UA-46303840-3'
 GA_ALLOW_PATHS = [r'^/x']
+GA_FORBID_PATHS = [r'^/x']
