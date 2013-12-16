@@ -114,6 +114,11 @@ class FlaskGA(object):
         """
         生成发送的dict
         """
+        if getattr(g, 'ga_begin_time', None):
+            load_time = int((time.time()-g.ga_begin_time) * 1000)
+        else:
+            load_time = 0
+
         send_dict = dict(
             funcname='track_pageview',
             tracker=dict(
@@ -124,7 +129,7 @@ class FlaskGA(object):
                     __ga=True,
                     source=self._local_ip,
                     content='/',
-                    ),
+                ),
             ),
             session=dict(
                 __ga=True,
@@ -132,7 +137,7 @@ class FlaskGA(object):
             page=dict(
                 __ga=True,
                 path=request.path,
-                load_time=int((time.time()-g.ga_begin_time) * 1000),
+                load_time=load_time,
             ),
             visitor=dict(
                 __ga=True,

@@ -111,6 +111,11 @@ class DjangoGA(object):
         """
         生成发送的dict
         """
+        if getattr(request, 'ga_begin_time', None):
+            load_time = int((time.time()-request.ga_begin_time) * 1000)
+        else:
+            load_time = 0
+
         send_dict = dict(
             funcname='track_pageview',
             tracker=dict(
@@ -129,7 +134,7 @@ class DjangoGA(object):
             page=dict(
                 __ga=True,
                 path=request.path,
-                load_time=int((time.time()-request.ga_begin_time) * 1000),
+                load_time=load_time,
             ),
             visitor=dict(
                 __ga=True,
