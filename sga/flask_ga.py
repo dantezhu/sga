@@ -121,7 +121,7 @@ class FlaskGA(object):
                 parse_result = urlparse.urlparse(request.referrer)
                 ga_referrer_path = '/%s%s' % (parse_result.netloc, parse_result.path)
             except Exception, e:
-                current_app.logger.error('urlparse fail. e: %s', e)
+                current_app.logger.info('urlparse fail. e: %s', e)
 
         if getattr(g, 'ga_begin_time', None):
             load_time = int((time.time()-g.ga_begin_time) * 1000)

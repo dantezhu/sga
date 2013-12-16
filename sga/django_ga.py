@@ -118,7 +118,7 @@ class DjangoGA(object):
                 parse_result = urlparse.urlparse(request.META['HTTP_REFERER'])
                 ga_referrer_path = '/%s%s' % (parse_result.netloc, parse_result.path)
             except Exception, e:
-                logger.error('urlparse fail. e: %s', e)
+                logger.info('urlparse fail. e: %s', e)
 
         if getattr(request, 'ga_begin_time', None):
             load_time = int((time.time()-request.ga_begin_time) * 1000)
