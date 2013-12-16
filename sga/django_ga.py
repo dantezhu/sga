@@ -16,6 +16,7 @@ import json
 import errno
 import time
 import re
+import urlparse
 from django.conf import settings
 
 import constants
@@ -111,6 +112,14 @@ class DjangoGA(object):
         """
         生成发送的dict
         """
+        ga_referrer_path = ''
+        if request.META.get('HTTP_REFERER', ''):
+            try:
+                parse_result = urlparse.urlparse(request.META['HTTP_REFERER'])
+                ga_referrer_path = '/%s%s' % (parse_result.netloc, parse_result.path)
+            except:
+                pass
+
         if getattr(request, 'ga_begin_time', None):
             load_time = int((time.time()-request.ga_begin_time) * 1000)
         else:
@@ -125,7 +134,7 @@ class DjangoGA(object):
                 campaign=dict(
                     __ga=True,
                     source=self._local_ip,
-                    content='/',
+                    content=ga_referrer_path,
                 ),
             ),
             session=dict(

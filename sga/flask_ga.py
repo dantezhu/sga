@@ -14,8 +14,9 @@ import socket
 import errno
 import time
 import re
+import urlparse
 
-from flask import current_app, request, session, g
+from flask import current_app, request, g
 
 import constants
 
@@ -114,6 +115,14 @@ class FlaskGA(object):
         """
         生成发送的dict
         """
+        ga_referrer_path = ''
+        if request.referrer:
+            try:
+                parse_result = urlparse.urlparse(request.referrer)
+                ga_referrer_path = '/%s%s' % (parse_result.netloc, parse_result.path)
+            except:
+                pass
+
         if getattr(g, 'ga_begin_time', None):
             load_time = int((time.time()-g.ga_begin_time) * 1000)
         else:
@@ -128,7 +137,7 @@ class FlaskGA(object):
                 campaign=dict(
                     __ga=True,
                     source=self._local_ip,
-                    content='/',
+                    content=ga_referrer_path,
                 ),
             ),
             session=dict(
