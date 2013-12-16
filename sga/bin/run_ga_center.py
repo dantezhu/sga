@@ -36,8 +36,6 @@ class RequireDebugOrNot(logging.Filter):
 
 FILE_MODULE_NAME = op.splitext(op.basename(__file__))[0]
 
-MONITORS = ['xmonitor@qq.com']
-
 LOG_FILE_PATH = "/tmp/ga_center.log"
 
 LOG_FORMAT = '\n'.join((
