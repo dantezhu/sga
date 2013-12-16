@@ -103,7 +103,7 @@ def build_parser():
     parser.add_argument('-t', '--host', default=constants.GA_CENTER_DEFAULT_HOST, help='bind host', action='store')
     parser.add_argument('-p', '--port', default=constants.GA_CENTER_DEFAULT_PORT, type=int, help='bind port', action='store')
     parser.add_argument('-d', '--debug', default=False, help='debug mode', action='store_true')
-    parser.add_argument('-v', '--version', action='version', version='sga %s' % sga.__version__)
+    parser.add_argument('-v', '--version', action='version', version='%s' % sga.__version__)
     return parser
 
 
