@@ -105,8 +105,6 @@ def signal_handler(signum, frame):
 
 
 class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
-    RECV_SIZE = constants.GA_CENTER_RECV_BUF_SIZE
-
     def handle(self):
         message = self.request[0]
         logger.debug("message, len: %s, content: %s", len(message), message)
