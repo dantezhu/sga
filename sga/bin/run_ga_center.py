@@ -116,8 +116,7 @@ def run_ga_center():
 
     configure_logging()
 
-    parser = build_parser()
-    args = parser.parse_args()
+    args = build_parser().parse_args()
 
     # 设置到全局配置里
     debug = args.debug
