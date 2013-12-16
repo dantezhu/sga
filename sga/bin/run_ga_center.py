@@ -5,14 +5,14 @@
 启动 ga_center
 """
 
-import os
-from optparse import OptionParser
+import argparse
 import os.path as op
 import logging
 import logging.config
 
 import sys
 sys.path.insert(0, '../../')
+import sga
 from sga.ga_center import GACenter
 from sga import constants
 
@@ -101,10 +101,11 @@ LOGGING = {
 
 
 def build_parser():
-    parser = OptionParser(usage="Usage: %prog -t host -p port")
-    parser.add_option("-t", "--host", dest="host", type='string', help="bind host", action="store")
-    parser.add_option("-p", "--port", dest="port", type='int', help="bind port", action="store")
-    parser.add_option("-d", "--debug", dest="debug", default=False, help="debug mode", action="store_true")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--host', default=constants.GA_CENTER_DEFAULT_HOST, help='bind host', action='store')
+    parser.add_argument('-p', '--port', default=constants.GA_CENTER_DEFAULT_PORT, type=int, help='bind port', action='store')
+    parser.add_argument('-d', '--debug', default=False, help='debug mode', action='store_true')
+    parser.add_argument('-v', '--version', action='version', version='sga %s' % sga.__version__)
     return parser
 
 
@@ -118,15 +119,16 @@ def run_ga_center():
     configure_logging()
 
     parser = build_parser()
-    options, system = parser.parse_args()
+    args = parser.parse_args()
 
-    host = options.host or constants.GA_CENTER_DEFAULT_HOST
-    port = options.port or constants.GA_CENTER_DEFAULT_PORT
-    debug = options.debug
+    # 设置到全局配置里
+    debug = args.debug
 
-    logger.info("Running GACenter on %(host)s:%(port)s, debug:%(debug)s" % dict(host=host, port=port, debug=debug))
+    logger.info("Running GACenter on %(host)s:%(port)s, debug:%(debug)s" % dict(
+        host=args.host, port=args.port, debug=args.debug)
+    )
 
-    prog = GACenter(host, port)
+    prog = GACenter(args.host, args.port)
     prog.run()
  
 if __name__ == '__main__':
