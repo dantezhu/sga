@@ -93,6 +93,7 @@ LOGGING = {
     }
 }
 
+
 logger = logging.getLogger('default')
 debug = False
 
