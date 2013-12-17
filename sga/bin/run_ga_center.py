@@ -16,10 +16,6 @@ import sga
 from sga.ga_center import GACenter
 from sga import constants
 
-logger = logging.getLogger('default')
-
-debug = False
-
 
 # 日志
 # 为了保证邮件只有在正式环境发送
@@ -96,6 +92,9 @@ LOGGING = {
         },
     }
 }
+
+logger = logging.getLogger('default')
+debug = False
 
 
 def build_parser():
