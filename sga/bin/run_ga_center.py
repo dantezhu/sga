@@ -126,7 +126,10 @@ def run_ga_center():
     )
 
     prog = GACenter(args.host, args.port)
-    prog.run()
+    try:
+        prog.run()
+    except KeyboardInterrupt:
+        sys.exit(0)
  
 if __name__ == '__main__':
     run_ga_center()

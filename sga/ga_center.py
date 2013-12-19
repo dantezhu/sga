@@ -99,11 +99,6 @@ def handle_message(message):
     return getattr(caller, funcname)(**kwargs)
 
 
-def signal_handler(signum, frame):
-    logger.info("signum:%s, frame:%s", signum, frame)
-    sys.exit(0)
-
-
 class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         message = self.request[0]
@@ -123,9 +118,6 @@ class GACenter(SocketServer.ThreadingUDPServer):
 
     @record_exception
     def run(self):
-        signal.signal(signal.SIGINT, signal_handler)
-        signal.signal(signal.SIGTERM, signal_handler)
-
         server_thread = threading.Thread(target=self.serve_forever)
         # Exit the server thread when the main thread terminates
         server_thread.daemon = True
