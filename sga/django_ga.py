@@ -8,6 +8,7 @@ django插件，绑定之后可以自动给本地的ga_center发送数据
     GA_CENTER_PORT : GACenter的启动端口
     GA_FORBID_PATHS : 被拒绝的paths，优先级高于 GA_ALLOW_PATHS
     GA_ALLOW_PATHS : 被允许的paths
+    GA_LOG_NAME : 用来打印log的name
 """
 
 import logging
@@ -21,8 +22,6 @@ from django.conf import settings
 
 import constants
 
-logger = logging.getLogger('django_ga')
-
 
 class DjangoGA(object):
     _ga_id = None
@@ -30,6 +29,7 @@ class DjangoGA(object):
     _ga_center_port = None
     _ga_forbid_paths = None
     _ga_allow_paths = None
+    _ga_log_name = None
 
     _local_ip = ''
 
@@ -41,6 +41,7 @@ class DjangoGA(object):
         self._ga_center_port = getattr(settings, 'GA_CENTER_PORT', None) or constants.GA_CENTER_DEFAULT_PORT
         self._ga_forbid_paths = getattr(settings, 'GA_FORBID_PATHS', None) or []
         self._ga_allow_paths = getattr(settings, 'GA_ALLOW_PATHS', None) or []
+        self._ga_log_name = getattr(settings, 'GA_LOG_NAME', None)
 
         self._local_ip = socket.gethostbyname(socket.gethostname()) or ''
 
@@ -67,12 +68,16 @@ class DjangoGA(object):
         except socket.error, e:
             # errno.EWOULDBLOCK = errno.EAGAIN = 11
             if e.args[0] == errno.EWOULDBLOCK:
-                logger.info('errno.EWOULDBLOCK')
+                self.logger.info('errno.EWOULDBLOCK')
             else:
-                logger.error('exception occur. msg[%s], traceback[%s]', str(e), __import__('traceback').format_exc())
+                self.logger.error('exception occur. msg[%s], traceback[%s]', str(e), __import__('traceback').format_exc())
+
+    @property
+    def logger(self):
+        return logging.getLogger(self._ga_log_name or 'django_ga')
 
     def _send_ga_data(self, request):
-        logger.debug('ga_id:%s', self._ga_id)
+        self.logger.debug('ga_id:%s', self._ga_id)
 
         if not self._ga_id:
             return False
@@ -83,13 +88,13 @@ class DjangoGA(object):
         try:
             send_dict = self._gen_send_dict(request)
             if not send_dict:
-                logger.debug('invalid request')
+                self.logger.debug('invalid request')
                 return False
             self.send_data_to_ga_center(send_dict)
 
             return True
         except Exception, e:
-            logger.error('exception occur. msg[%s], traceback[%s]', str(e), __import__('traceback').format_exc())
+            self.logger.error('exception occur. msg[%s], traceback[%s]', str(e), __import__('traceback').format_exc())
 
         return False
 
@@ -101,7 +106,7 @@ class DjangoGA(object):
         # 先判断是否在forbid列表里，只要发现就直接拒绝
         for pattern in self._ga_forbid_paths:
             if re.match(pattern, request.path):
-                logger.debug('path is in forbid paths. patten: %s, path: %s', pattern, request.path)
+                self.logger.debug('path is in forbid paths. patten: %s, path: %s', pattern, request.path)
                 return False
 
         # 只有allow列表不为空的情况下，才有效
@@ -110,7 +115,7 @@ class DjangoGA(object):
                 if re.match(pattern, request.path):
                     return True
             else:
-                logger.debug('path is not in allow paths. path: %s', request.path)
+                self.logger.debug('path is not in allow paths. path: %s', request.path)
                 return False
 
         return True
@@ -130,7 +135,7 @@ class DjangoGA(object):
                 parse_result = urlparse.urlparse(request.META['HTTP_REFERER'])
                 ga_referrer_path = '/%s%s' % (parse_result.netloc, parse_result.path)
             except Exception, e:
-                logger.info('urlparse fail. e: %s', e)
+                self.logger.info('urlparse fail. e: %s', e)
 
         send_dict = dict(
             funcname='track_pageview',
