@@ -75,16 +75,23 @@ class DjangoGA(object):
         logger.debug('ga_id:%s', self._ga_id)
 
         if not self._ga_id:
-            return
+            return False
 
         if not self._is_ga_request(request):
-            return
+            return False
 
         try:
             send_dict = self._gen_send_dict(request)
+            if not send_dict:
+                logger.debug('invalid request')
+                return False
             self.send_data_to_ga_center(send_dict)
+
+            return True
         except Exception, e:
             logger.error('exception occur. msg[%s], traceback[%s]', str(e), __import__('traceback').format_exc())
+
+        return False
 
     def _is_ga_request(self, request):
         """
@@ -112,6 +119,11 @@ class DjangoGA(object):
         """
         生成发送的dict
         """
+        if not getattr(request, 'ga_begin_time', None):
+            return None
+
+        load_time = int((time.time()-request.ga_begin_time) * 1000)
+
         ga_referrer_path = ''
         if request.META.get('HTTP_REFERER', ''):
             try:
@@ -119,11 +131,6 @@ class DjangoGA(object):
                 ga_referrer_path = '/%s%s' % (parse_result.netloc, parse_result.path)
             except Exception, e:
                 logger.info('urlparse fail. e: %s', e)
-
-        if getattr(request, 'ga_begin_time', None):
-            load_time = int((time.time()-request.ga_begin_time) * 1000)
-        else:
-            load_time = 0
 
         send_dict = dict(
             funcname='track_pageview',
