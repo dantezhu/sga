@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-flask插件，绑定之后可以自动给本地的ga_center发送数据
+flask插件，绑定之后可以自动给本地的ga_agent发送数据
 要求配置:
     GA_ID : Google分析的跟踪ID
     GA_AGENT_HOST : GAAgent的启动IP
@@ -80,7 +80,7 @@ class FlaskGA(object):
                     # 这个时候不是正常的请求，比如是用test_request_context模拟的
                     self.logger.debug('invalid request, may be in test_request_context')
                     return False
-                self.send_data_to_ga_center(send_dict)
+                self.send_data_to_ga_agent(send_dict)
 
                 return True
             except Exception, e:
@@ -88,7 +88,7 @@ class FlaskGA(object):
 
             return False
 
-    def send_data_to_ga_center(self, send_dict):
+    def send_data_to_ga_agent(self, send_dict):
         """
         可以在网站中调用
         """

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-用来作为接受google统计上报的center
+用来作为接受google统计上报的agent
 通过udp通道。
 """
 
@@ -18,7 +18,7 @@ import sys
 import time
 import constants
 
-logger = logging.getLogger('ga_center')
+logger = logging.getLogger(constants.GA_AGENT_LOG_NAME)
 
 
 def record_exception(func):

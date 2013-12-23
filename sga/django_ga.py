@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-django插件，绑定之后可以自动给本地的ga_center发送数据
+django插件，绑定之后可以自动给本地的ga_agent发送数据
 要求配置:
     GA_ID : Google分析的跟踪ID
     GA_AGENT_HOST : GAAgent的启动IP
@@ -59,7 +59,7 @@ class DjangoGA(object):
         self._send_ga_data(request)
         return response
 
-    def send_data_to_ga_center(self, send_dict):
+    def send_data_to_ga_agent(self, send_dict):
         """
         可以在网站中调用
         """
@@ -90,7 +90,7 @@ class DjangoGA(object):
             if not send_dict:
                 self.logger.debug('invalid request')
                 return False
-            self.send_data_to_ga_center(send_dict)
+            self.send_data_to_ga_agent(send_dict)
 
             return True
         except Exception, e:

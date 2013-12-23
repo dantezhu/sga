@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
 
+GA_AGENT_LOG_NAME = 'ga_agent'
 GA_AGENT_DEFAULT_HOST = '127.0.0.1'
 GA_AGENT_DEFAULT_PORT = 5555
