@@ -67,10 +67,8 @@ def recur_make_ga_obj(name, conf):
 
 
 class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
-    def handle(self):
-        message = self.request[0]
-        self.server.logger.debug("message, len: %s, content: %s", len(message), message)
 
+    def _handle_message(self, message):
         recv_dict = json.loads(message)
 
         # 就可以直接删除了
@@ -86,6 +84,14 @@ class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
             else:
                 kwargs[name] = obj
         getattr(caller, funcname)(**kwargs)
+
+    def handle(self):
+        message = self.request[0]
+        self.server.logger.debug("message, len: %s, content: %s", len(message), message)
+        try:
+            self._handle_message(message)
+        except Exception, e:
+            self.server.logger.error('exception occur. e: %s', e)
 
 
 class GAAgent(SocketServer.ThreadingUDPServer):
