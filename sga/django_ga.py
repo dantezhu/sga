@@ -4,8 +4,8 @@
 django插件，绑定之后可以自动给本地的ga_center发送数据
 要求配置:
     GA_ID : Google分析的跟踪ID
-    GA_CENTER_HOST : GACenter的启动IP
-    GA_CENTER_PORT : GACenter的启动端口
+    GA_AGENT_HOST : GAAgent的启动IP
+    GA_AGENT_PORT : GAAgent的启动端口
     GA_FORBID_PATHS : 被拒绝的paths，优先级高于 GA_ALLOW_PATHS
     GA_ALLOW_PATHS : 被允许的paths
     GA_LOG_NAME : 用来打印log的name
@@ -25,8 +25,8 @@ import constants
 
 class DjangoGA(object):
     _ga_id = None
-    _ga_center_host = None
-    _ga_center_port = None
+    _ga_agent_host = None
+    _ga_agent_port = None
     _ga_forbid_paths = None
     _ga_allow_paths = None
     _ga_log_name = None
@@ -37,8 +37,8 @@ class DjangoGA(object):
 
     def __init__(self):
         self._ga_id = getattr(settings, 'GA_ID', None)
-        self._ga_center_host = getattr(settings, 'GA_CENTER_HOST', None) or constants.GA_CENTER_DEFAULT_HOST
-        self._ga_center_port = getattr(settings, 'GA_CENTER_PORT', None) or constants.GA_CENTER_DEFAULT_PORT
+        self._ga_agent_host = getattr(settings, 'GA_AGENT_HOST', None) or constants.GA_AGENT_DEFAULT_HOST
+        self._ga_agent_port = getattr(settings, 'GA_AGENT_PORT', None) or constants.GA_AGENT_DEFAULT_PORT
         self._ga_forbid_paths = getattr(settings, 'GA_FORBID_PATHS', None) or []
         self._ga_allow_paths = getattr(settings, 'GA_ALLOW_PATHS', None) or []
         self._ga_log_name = getattr(settings, 'GA_LOG_NAME', None)
@@ -64,7 +64,7 @@ class DjangoGA(object):
         可以在网站中调用
         """
         try:
-            self._socket.sendto(json.dumps(send_dict), (self._ga_center_host, self._ga_center_port))
+            self._socket.sendto(json.dumps(send_dict), (self._ga_agent_host, self._ga_agent_port))
         except socket.error, e:
             # errno.EWOULDBLOCK = errno.EAGAIN = 11
             if e.args[0] == errno.EWOULDBLOCK:

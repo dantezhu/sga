@@ -4,8 +4,8 @@
 flask插件，绑定之后可以自动给本地的ga_center发送数据
 要求配置:
     GA_ID : Google分析的跟踪ID
-    GA_CENTER_HOST : GACenter的启动IP
-    GA_CENTER_PORT : GACenter的启动端口
+    GA_AGENT_HOST : GAAgent的启动IP
+    GA_AGENT_PORT : GAAgent的启动端口
     GA_FORBID_PATHS : 被拒绝的paths，优先级高于 GA_ALLOW_PATHS
     GA_ALLOW_PATHS : 被允许的paths
     GA_LOG_NAME : 用来打印log的name
@@ -25,8 +25,8 @@ import constants
 
 class FlaskGA(object):
     _ga_id = None
-    _ga_center_host = None
-    _ga_center_port = None
+    _ga_agent_host = None
+    _ga_agent_port = None
     _ga_forbid_paths = None
     _ga_allow_paths = None
     _ga_log_name = None
@@ -48,8 +48,8 @@ class FlaskGA(object):
         绑定app
         """
         self._ga_id = app.config.get('GA_ID')
-        self._ga_center_host = app.config.get('GA_CENTER_HOST') or constants.GA_CENTER_DEFAULT_HOST
-        self._ga_center_port = app.config.get('GA_CENTER_PORT') or constants.GA_CENTER_DEFAULT_PORT
+        self._ga_agent_host = app.config.get('GA_AGENT_HOST') or constants.GA_AGENT_DEFAULT_HOST
+        self._ga_agent_port = app.config.get('GA_AGENT_PORT') or constants.GA_AGENT_DEFAULT_PORT
         self._ga_forbid_paths = app.config.get('GA_FORBID_PATHS') or []
         self._ga_allow_paths = app.config.get('GA_ALLOW_PATHS') or []
         self._ga_log_name = app.config.get('GA_LOG_NAME')
@@ -93,7 +93,7 @@ class FlaskGA(object):
         可以在网站中调用
         """
         try:
-            self._socket.sendto(json.dumps(send_dict), (self._ga_center_host, self._ga_center_port))
+            self._socket.sendto(json.dumps(send_dict), (self._ga_agent_host, self._ga_agent_port))
         except socket.error, e:
             # errno.EWOULDBLOCK = errno.EAGAIN = 11
             if e.args[0] == errno.EWOULDBLOCK:

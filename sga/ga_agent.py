@@ -60,7 +60,7 @@ def alloc_ga_obj_by_name(name):
     return obj
 
 
-def recur_make_obj(name, conf):
+def recur_make_ga_obj(name, conf):
     """
     递归生成
     """
@@ -72,7 +72,7 @@ def recur_make_obj(name, conf):
         for attr_name, attr_value in conf.items():
             if attr_name == '__ga':
                 continue
-            real_value = recur_make_obj(attr_name, attr_value)
+            real_value = recur_make_ga_obj(attr_name, attr_value)
             setattr(obj, attr_name, real_value)
 
         return obj
@@ -90,7 +90,7 @@ def handle_message(message):
     kwargs = dict()
 
     for name, conf in recv_dict.items():
-        obj = recur_make_obj(name, conf)
+        obj = recur_make_ga_obj(name, conf)
 
         if name == 'tracker':
             caller = obj
@@ -107,13 +107,13 @@ class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
         handle_message(message)
 
 
-class GACenter(SocketServer.ThreadingUDPServer):
+class GAAgent(SocketServer.ThreadingUDPServer):
 
     def __init__(self, host=None, port=None):
-        # 因为父类继承是用的老风格，所以必须按照下面的方式来写。 不能使用 super(GACenter, self).__init__
+        # 因为父类继承是用的老风格，所以必须按照下面的方式来写。 不能使用 super(GAAgent, self).__init__
         SocketServer.ThreadingUDPServer.__init__(self,
-                                                 (host or constants.GA_CENTER_DEFAULT_HOST,
-                                                  port or constants.GA_CENTER_DEFAULT_PORT),
+                                                 (host or constants.GA_AGENT_DEFAULT_HOST,
+                                                  port or constants.GA_AGENT_DEFAULT_PORT),
                                                  ThreadedUDPRequestHandler)
 
     @record_exception
