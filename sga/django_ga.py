@@ -37,8 +37,8 @@ class DjangoGA(object):
 
     def __init__(self):
         self._ga_id = getattr(settings, 'GA_ID', None)
-        self._ga_agent_host = getattr(settings, 'GA_AGENT_HOST', None) or constants.GA_AGENT_DEFAULT_HOST
-        self._ga_agent_port = getattr(settings, 'GA_AGENT_PORT', None) or constants.GA_AGENT_DEFAULT_PORT
+        self._ga_agent_host = getattr(settings, 'GA_AGENT_HOST', None) or constants.GA_AGENT_HOST
+        self._ga_agent_port = getattr(settings, 'GA_AGENT_PORT', None) or constants.GA_AGENT_PORT
         self._ga_forbid_paths = getattr(settings, 'GA_FORBID_PATHS', None) or []
         self._ga_allow_paths = getattr(settings, 'GA_ALLOW_PATHS', None) or []
         self._ga_log_name = getattr(settings, 'GA_LOG_NAME', None)

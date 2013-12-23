@@ -112,8 +112,8 @@ class GAAgent(SocketServer.ThreadingUDPServer):
     def __init__(self, host=None, port=None):
         # 因为父类继承是用的老风格，所以必须按照下面的方式来写。 不能使用 super(GAAgent, self).__init__
         SocketServer.ThreadingUDPServer.__init__(self,
-                                                 (host or constants.GA_AGENT_DEFAULT_HOST,
-                                                  port or constants.GA_AGENT_DEFAULT_PORT),
+                                                 (host or constants.GA_AGENT_HOST,
+                                                  port or constants.GA_AGENT_PORT),
                                                  ThreadedUDPRequestHandler)
 
     @record_exception
