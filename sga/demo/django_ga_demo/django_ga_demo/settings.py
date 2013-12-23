@@ -48,7 +48,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'sga.django_ga.DjangoGA',
+    'sga.DjangoGA',
 )
 
 ROOT_URLCONF = 'django_ga_demo.urls'

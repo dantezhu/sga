@@ -2,7 +2,7 @@
 
 import time
 from flask import Flask
-from sga.flask_ga import FlaskGA
+from sga import FlaskGA
 
 DEBUG = True
 
