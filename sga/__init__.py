@@ -1,1 +1,5 @@
-__version__ = '0.1.22'
+__version__ = '0.1.23'
+
+from .ga_agent import GAAgent
+from .django_ga import DjangoGA
+from .flask_ga import FlaskGA
