@@ -6,6 +6,7 @@
     GA_AGENT_PORT : GAAgent的启动端口
     GA_FORBID_PATHS : 被拒绝的paths，优先级高于 GA_ALLOW_PATHS
     GA_ALLOW_PATHS : 被允许的paths
+    GA_HACK_PATHS: 上报时按照规则替换，在allow和forbid判断之后进行. 示例: [(r'^/all(\S+)', r'ok\g<1>')]
     GA_LOGGER_NAME : 用来打印log的name
 """
 
@@ -24,6 +25,7 @@ class GAAdapter(object):
     _ga_agent_port = None
     _ga_forbid_paths = None
     _ga_allow_paths = None
+    _ga_hack_paths = None
     _ga_logger_name = None
 
     _local_ip = ''
@@ -79,3 +81,22 @@ class GAAdapter(object):
                 return False
 
         return True
+
+    def hack_path(self, path):
+        """
+        将path替换为需要上报的
+        """
+        if not self._ga_hack_paths:
+            return path
+
+        for src_p, dst_p in self._ga_hack_paths:
+            if not re.match(src_p, path):
+                continue
+
+            try:
+                return re.sub(src_p, dst_p, path)
+            except Exception, e:
+                self.logger.error('re.sub fail. path: %s, src_p:%s, dst_p: %s, e: %s', path, src_p, dst_p, e)
+                return path
+
+        return path

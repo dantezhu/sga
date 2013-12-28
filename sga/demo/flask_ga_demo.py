@@ -9,6 +9,9 @@ DEBUG = True
 GA_ID = 'UA-46303840-3'
 GA_FORBID_PATHS = [r'^/forbid']
 GA_ALLOW_PATHS = [r'^/allow', r'/forbid']
+GA_HACK_PATHS = [
+    (r'/all(\S+)', r'/\g<1>/ok'),
+]
 
 app = Flask(__name__)
 app.config.from_object(__name__)
