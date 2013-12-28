@@ -1,4 +1,4 @@
-__version__ = '0.1.25'
+__version__ = '0.1.26'
 
 from .ga_agent import GAAgent
 from .django_ga import DjangoGA
