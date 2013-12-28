@@ -2,13 +2,6 @@
 
 """
 django插件，绑定之后可以自动给本地的ga_agent发送数据
-要求配置:
-    GA_ID : Google分析的跟踪ID
-    GA_AGENT_HOST : GAAgent的启动IP
-    GA_AGENT_PORT : GAAgent的启动端口
-    GA_FORBID_PATHS : 被拒绝的paths，优先级高于 GA_ALLOW_PATHS
-    GA_ALLOW_PATHS : 被允许的paths
-    GA_LOGGER_NAME : 用来打印log的name
 """
 
 import logging
