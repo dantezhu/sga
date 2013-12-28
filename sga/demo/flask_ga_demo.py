@@ -7,8 +7,8 @@ from sga import FlaskGA
 DEBUG = True
 
 GA_ID = 'UA-46303840-3'
-GA_FORBID_PATHS = [r'^/x']
-GA_ALLOW_PATHS = [r'^/x', r'/y']
+GA_FORBID_PATHS = [r'^/forbid']
+GA_ALLOW_PATHS = [r'^/allow', r'/forbid']
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -16,11 +16,15 @@ app.config.from_object(__name__)
 fga = FlaskGA(app)
 
 
-@app.route('/ok')
-def ok():
+@app.route('/allow')
+def allow():
     time.sleep(1)
     return u'ok'
 
+@app.route('/forbid')
+def forbid():
+    time.sleep(1)
+    return u'forbid'
 
 if __name__ == '__main__':
     app.run()

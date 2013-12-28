@@ -5,11 +5,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 
-def ok(request):
+def allow(request):
     time.sleep(1)
 
-    return HttpResponse('ok')
+    return HttpResponse('allow')
 
-def fail(request):
-    x = 1/0
+
+def forbid(request):
+    time.sleep(1)
+
+    return HttpResponse('forbid')
 
