@@ -8,7 +8,7 @@ django插件，绑定之后可以自动给本地的ga_agent发送数据
     GA_AGENT_PORT : GAAgent的启动端口
     GA_FORBID_PATHS : 被拒绝的paths，优先级高于 GA_ALLOW_PATHS
     GA_ALLOW_PATHS : 被允许的paths
-    GA_LOG_NAME : 用来打印log的name
+    GA_LOGGER_NAME : 用来打印log的name
 """
 
 import logging
@@ -29,7 +29,7 @@ class DjangoGA(object):
     _ga_agent_port = None
     _ga_forbid_paths = None
     _ga_allow_paths = None
-    _ga_log_name = None
+    _ga_logger_name = None
 
     _local_ip = ''
 
@@ -41,7 +41,7 @@ class DjangoGA(object):
         self._ga_agent_port = getattr(settings, 'GA_AGENT_PORT', None) or constants.GA_AGENT_PORT
         self._ga_forbid_paths = getattr(settings, 'GA_FORBID_PATHS', None) or []
         self._ga_allow_paths = getattr(settings, 'GA_ALLOW_PATHS', None) or []
-        self._ga_log_name = getattr(settings, 'GA_LOG_NAME', None)
+        self._ga_logger_name = getattr(settings, 'GA_LOGGER_NAME', None)
 
         self._local_ip = socket.gethostbyname(socket.gethostname()) or ''
 
@@ -74,7 +74,7 @@ class DjangoGA(object):
 
     @property
     def logger(self):
-        return logging.getLogger(self._ga_log_name or 'django_ga')
+        return logging.getLogger(self._ga_logger_name or 'django_ga')
 
     def _send_ga_data(self, request):
         self.logger.debug('ga_id:%s', self._ga_id)

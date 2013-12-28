@@ -96,13 +96,13 @@ class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
 
 class GAAgent(SocketServer.ThreadingUDPServer):
 
-    def __init__(self, host=None, port=None, log_name=None):
+    def __init__(self, host=None, port=None, logger_name=None):
         # 因为父类继承是用的老风格，所以必须按照下面的方式来写。 不能使用 super(GAAgent, self).__init__
         SocketServer.ThreadingUDPServer.__init__(self,
                                                  (host or constants.GA_AGENT_HOST,
                                                   port or constants.GA_AGENT_PORT),
                                                  ThreadedUDPRequestHandler)
-        self.logger = logging.getLogger(log_name or constants.GA_AGENT_LOG_NAME)
+        self.logger = logging.getLogger(logger_name or constants.GA_AGENT_LOGGER_NAME)
 
     def run(self):
         server_thread = threading.Thread(target=self.serve_forever)

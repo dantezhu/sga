@@ -8,7 +8,7 @@ flask插件，绑定之后可以自动给本地的ga_agent发送数据
     GA_AGENT_PORT : GAAgent的启动端口
     GA_FORBID_PATHS : 被拒绝的paths，优先级高于 GA_ALLOW_PATHS
     GA_ALLOW_PATHS : 被允许的paths
-    GA_LOG_NAME : 用来打印log的name
+    GA_LOGGER_NAME : 用来打印log的name
 """
 import logging
 import json
@@ -29,7 +29,7 @@ class FlaskGA(object):
     _ga_agent_port = None
     _ga_forbid_paths = None
     _ga_allow_paths = None
-    _ga_log_name = None
+    _ga_logger_name = None
 
     _local_ip = ''
 
@@ -52,7 +52,7 @@ class FlaskGA(object):
         self._ga_agent_port = app.config.get('GA_AGENT_PORT') or constants.GA_AGENT_PORT
         self._ga_forbid_paths = app.config.get('GA_FORBID_PATHS') or []
         self._ga_allow_paths = app.config.get('GA_ALLOW_PATHS') or []
-        self._ga_log_name = app.config.get('GA_LOG_NAME')
+        self._ga_logger_name = app.config.get('GA_LOGGER_NAME')
 
         self._local_ip = socket.gethostbyname(socket.gethostname()) or ''
 
@@ -103,7 +103,7 @@ class FlaskGA(object):
 
     @property
     def logger(self):
-        return current_app.logger if not self._ga_log_name else logging.getLogger(self._ga_log_name)
+        return current_app.logger if not self._ga_logger_name else logging.getLogger(self._ga_logger_name)
 
     def _is_ga_request(self):
         """
