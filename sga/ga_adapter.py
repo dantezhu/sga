@@ -66,13 +66,13 @@ class GAAdapter(object):
         """
 
         # 先判断是否在forbid列表里，只要发现就直接拒绝
-        for pattern in self._ga_forbid_paths:
+        for pattern in self._ga_forbid_paths or tuple():
             if re.match(pattern, path):
                 self.logger.debug('path is in forbid paths. patten: %s, path: %s', pattern, path)
                 return False
 
-        # 只有allow列表不为空的情况下，才有效
-        if self._ga_allow_paths:
+        # 改成不为None就有效，这样空列表也是生效的
+        if self._ga_allow_paths is not None:
             for pattern in self._ga_allow_paths:
                 if re.match(pattern, path):
                     return True

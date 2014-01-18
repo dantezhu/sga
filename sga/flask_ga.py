@@ -32,9 +32,9 @@ class FlaskGA(GAAdapter):
         self._ga_id = app.config.get('GA_ID')
         self._ga_agent_host = app.config.get('GA_AGENT_HOST') or constants.GA_AGENT_HOST
         self._ga_agent_port = app.config.get('GA_AGENT_PORT') or constants.GA_AGENT_PORT
-        self._ga_forbid_paths = app.config.get('GA_FORBID_PATHS') or []
-        self._ga_allow_paths = app.config.get('GA_ALLOW_PATHS') or []
-        self._ga_hack_paths = app.config.get('GA_HACK_PATHS') or []
+        self._ga_forbid_paths = app.config.get('GA_FORBID_PATHS')
+        self._ga_allow_paths = app.config.get('GA_ALLOW_PATHS')
+        self._ga_hack_paths = app.config.get('GA_HACK_PATHS')
         self._ga_logger_name = app.config.get('GA_LOGGER_NAME')
 
         @app.before_request
