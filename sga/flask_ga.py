@@ -11,7 +11,7 @@ import time
 import re
 import urlparse
 
-from flask import current_app, request, g
+from flask import request, g
 
 import constants
 from ga_adapter import GAAdapter
@@ -67,7 +67,7 @@ class FlaskGA(GAAdapter):
 
     @property
     def logger(self):
-        return current_app.logger if not self._ga_logger_name else logging.getLogger(self._ga_logger_name)
+        return logging.getLogger(self._ga_logger_name or 'flask_ga')
 
     def _gen_send_dict(self):
         """
