@@ -1,9 +1,8 @@
 from setuptools import setup
-import sga
 
 setup(
     name="sga",
-    version=sga.__version__,
+    version='0.1.30',
     zip_safe=False,
     platforms='any',
     packages=['sga'],
