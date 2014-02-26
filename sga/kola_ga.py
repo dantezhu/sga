@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 
 import time
-from kola import Blueprint
-from .ga_adapter import GAAdapter
+from ga_adapter import GAAdapter
 import constants
 
 
-class GABlueprint(Blueprint, GAAdapter):
+class KolaGA(GAAdapter):
     """
     上报GA
     使用:
-        Kola().register_blueprint(GABlueprint(dict(...)))
+        KolaGA(dict(...))).register_to_app(app)
     config: dict类型
         GA_ID   必填
         GA_AGENT_HOST
@@ -20,13 +18,8 @@ class GABlueprint(Blueprint, GAAdapter):
         GA_ALLOW_ENDPOINTS
     """
 
-    config = None
-
-    def __init__(self, config, name=None):
+    def __init__(self, config):
         GAAdapter.__init__(self)
-        Blueprint.__init__(self, name or 'kola_ga')
-
-        self.config = config
 
         self._ga_id = config.get('GA_ID')
         self._ga_agent_host = config.get('GA_AGENT_HOST') or constants.GA_AGENT_HOST
@@ -36,18 +29,16 @@ class GABlueprint(Blueprint, GAAdapter):
         self._ga_hack_paths = config.get('GA_HACK_PATHS')
         self._ga_logger_name = config.get('GA_LOGGER_NAME')
 
-        self.register_callback_funcs()
-
-    def register_callback_funcs(self):
+    def register_to_app(self, app):
         """
         注册相关的函数
         """
 
-        @self.before_app_request
+        @app.before_app_request
         def prepare_ga_data(request):
             request.ga_begin_time = time.time()
 
-        @self.after_app_request
+        @app.after_app_request
         def send_ga_data(request, result):
             if not self.is_ga_request(request.values.get('endpoint')):
                 return
