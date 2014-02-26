@@ -1,4 +1,4 @@
-__version__ = '0.1.31'
+__version__ = '0.1.32'
 
 from .ga_agent import GAAgent
 try:
@@ -7,5 +7,10 @@ except:
     pass
 try:
     from .flask_ga import FlaskGA
+except:
+    pass
+
+try:
+    from .kola_ga import KolaGA
 except:
     pass
