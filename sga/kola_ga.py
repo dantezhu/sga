@@ -39,11 +39,16 @@ class KolaGA(GAAdapter):
 
         @app.after_request
         def send_ga_data(request, result):
+            self.logger.debug('ga_id:%s', self._ga_id)
+
+            if not self._ga_id:
+                return False
+
             if not self.is_ga_request(request.endpoint):
                 return
 
             try:
-                send_dict = self.gen_send_dict(request)
+                send_dict = self._gen_send_dict(request)
                 if not send_dict:
                     # 这个时候不是正常的请求，比如是用test_request_context模拟的
                     self.logger.debug('invalid request')
@@ -60,7 +65,7 @@ class KolaGA(GAAdapter):
     def logger(self):
         return logging.getLogger(self._ga_logger_name or 'kola_ga')
 
-    def gen_send_dict(self, request):
+    def _gen_send_dict(self, request):
         """
         生成发送的dict
         """
