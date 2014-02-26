@@ -62,7 +62,7 @@ class DjangoGA(GAAdapter):
 
             return True
         except Exception, e:
-            self.logger.error('exception occur. msg[%s], traceback[%s]', str(e), __import__('traceback').format_exc())
+            self.logger.exception('exception')
 
         return False
 
