@@ -15,7 +15,7 @@ class KolaGA(GAAdapter):
     """
 
     def __init__(self, config, app=None):
-        GAAdapter.__init__(self)
+        super(KolaGA, self).__init__()
 
         self._ga_id = config.get('GA_ID')
         self._ga_agent_host = config.get('GA_AGENT_HOST') or constants.GA_AGENT_HOST

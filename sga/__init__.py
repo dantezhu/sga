@@ -1,4 +1,4 @@
-__version__ = '0.1.33'
+__version__ = '0.1.35'
 
 from .ga_agent import GAAgent
 try:
