@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+import logging
 from ga_adapter import GAAdapter
 import constants
 
@@ -9,16 +10,11 @@ class KolaGA(GAAdapter):
     """
     上报GA
     使用:
-        KolaGA(dict(...))).register_to_app(app)
+        KolaGA(dict(...))).init_app(app)
     config: dict类型
-        GA_ID   必填
-        GA_AGENT_HOST
-        GA_AGENT_PORT
-        GA_FORBID_ENDPOINTS
-        GA_ALLOW_ENDPOINTS
     """
 
-    def __init__(self, config):
+    def __init__(self, config, app=None):
         GAAdapter.__init__(self)
 
         self._ga_id = config.get('GA_ID')
@@ -29,18 +25,21 @@ class KolaGA(GAAdapter):
         self._ga_hack_paths = config.get('GA_HACK_PATHS')
         self._ga_logger_name = config.get('GA_LOGGER_NAME')
 
-    def register_to_app(self, app):
+        if app:
+            self.init_app(app)
+
+    def init_app(self, app):
         """
         注册相关的函数
         """
 
-        @app.before_app_request
+        @app.before_request
         def prepare_ga_data(request):
             request.ga_begin_time = time.time()
 
-        @app.after_app_request
+        @app.after_request
         def send_ga_data(request, result):
-            if not self.is_ga_request(request.values.get('endpoint')):
+            if not self.is_ga_request(request.endpoint):
                 return
 
             try:
@@ -56,6 +55,10 @@ class KolaGA(GAAdapter):
                 self.logger.exception('exception')
 
             return False
+
+    @property
+    def logger(self):
+        return logging.getLogger(self._ga_logger_name or 'kola_ga')
 
     def gen_send_dict(self, request):
         """
@@ -84,7 +87,7 @@ class KolaGA(GAAdapter):
             ),
             page=dict(
                 __ga=True,
-                path='/' + request.values.get('endpoint'),
+                path='/' + self.hack_path(request.endpoint),
                 load_time=load_time,
             ),
             visitor=dict(
