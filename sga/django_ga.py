@@ -73,7 +73,7 @@ class DjangoGA(GAAdapter):
         if not getattr(request, 'ga_begin_time', None):
             return None
 
-        load_time = int((time.time()-request.ga_begin_time) * 1000)
+        load_time = int((time.time()-request.ga_begin_time) * 1000 * 1000)
 
         ga_referrer_path = ''
         if request.META.get('HTTP_REFERER', ''):

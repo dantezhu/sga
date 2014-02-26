@@ -76,7 +76,7 @@ class FlaskGA(GAAdapter):
         if not getattr(g, 'ga_begin_time', None):
             return None
 
-        load_time = int((time.time()-g.ga_begin_time) * 1000)
+        load_time = int((time.time()-g.ga_begin_time) * 1000 * 1000)
 
         ga_referrer_path = ''
         if request.referrer:
