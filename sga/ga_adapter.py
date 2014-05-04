@@ -19,15 +19,6 @@ import re
 import urlparse
 
 
-def re_equal(pattern, string):
-    """
-    判断表达式与string是否能完全匹配
-    """
-    result = re.match(pattern, string)
-
-    return result and result.group() == string
-
-
 class GAAdapter(object):
     _ga_id = None
     _ga_agent_host = None
@@ -75,13 +66,13 @@ class GAAdapter(object):
         """
 
         # 先判断是否在forbid列表里，只要发现就直接拒绝
-        if filter(lambda x: re_equal(x, path), self._ga_forbid_paths or tuple()):
+        if filter(lambda x: re.match(x, path), self._ga_forbid_paths or tuple()):
             self.logger.debug('path is in forbid paths. path: %s', path)
             return False
 
         # 改成不为None就有效，这样空列表也是生效的
         if self._ga_allow_paths is not None:
-            if not filter(lambda x: re_equal(x, path), self._ga_allow_paths):
+            if not filter(lambda x: re.match(x, path), self._ga_allow_paths):
                 self.logger.debug('path is not in allow paths. path: %s', path)
                 return False
 

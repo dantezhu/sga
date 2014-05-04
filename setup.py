@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="sga",
-    version='0.1.37',
+    version='0.1.38',
     zip_safe=False,
     platforms='any',
     packages=['sga'],
